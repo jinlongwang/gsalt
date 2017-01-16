@@ -1,2 +1,4 @@
 # gsalt
-remote command execute by golang
+remote command execute system
+
+a golang project like saltstack
