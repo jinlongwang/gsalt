@@ -10,7 +10,7 @@ import (
 func InitTcpServer() {
 	var tcpAddr *net.TCPAddr
 	g.ConnMap = make(map[string]*net.TCPConn)
-	tcpAddr, _ = net.ResolveTCPAddr("tcp", "127.0.0.1:1989")
+	tcpAddr, _ = net.ResolveTCPAddr("tcp", "127.0.0.1:1989") //TODO read from config
 
 	tcpListener, _ := net.ListenTCP("tcp", tcpAddr)
 
