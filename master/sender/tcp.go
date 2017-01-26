@@ -5,6 +5,9 @@ import (
 	"net"
 	"github.com/gsalt/master/g"
 	"bufio"
+	"strings"
+	"log"
+	"github.com/gsalt/master/channel"
 )
 
 func InitTcpServer() {
@@ -24,7 +27,7 @@ func InitTcpServer() {
 
 		fmt.Println("A client connected : " + tcpConn.RemoteAddr().String())
 		// 新连接加入map
-		g.ConnMap[tcpConn.RemoteAddr().String()] = tcpConn
+		g.ConnMap["abc"] = tcpConn
 		go tcpPipe(tcpConn)
 	}
 }
@@ -42,9 +45,25 @@ func tcpPipe(conn *net.TCPConn) {
 		if err != nil {
 			return
 		}
-		fmt.Println(conn.RemoteAddr().String() + ":" + string(message))
-		// 这里返回消息改为了广播
-		//boradcastMessage(conn.RemoteAddr().String() + ":" + string(message))
+		args := strings.Split(message, "$")
+		switch  args[0]{
+		case "auth":
+			auth(conn, args[1])
+		default:
+			get(args[1])
+		}
+		//fmt.Println(conn.RemoteAddr().String() + ":" + string(message))
 	}
 }
 
+func auth(conn *net.TCPConn, minion_key string) {
+	//println(minion_key)
+	channel.UserChanel.New(minion_key, conn)
+}
+
+func get(key string)  {
+	conn := channel.UserChanel.Get(key)
+	log.Println("*******")
+	log.Println(conn.RemoteAddr().String())
+	log.Println("*******")
+}
